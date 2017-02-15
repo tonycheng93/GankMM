@@ -1,5 +1,7 @@
 package com.sky.gankmm.ui.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -7,20 +9,51 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sky.gankmm.R;
+import com.sky.gankmm.data.SyncService;
+import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.ui.base.BaseActivity;
+import com.sky.gankmm.util.DialogFactory;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MainMvpView {
+
+    private static final String EXTRA_TRIGGER_SYNC_FLAG =
+            "com.sky.gankmm.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
+
+    @Inject
+    MainPresenter mMainPresenter;
+    @Inject
+    MainAdapter mMainAdapter;
+
+    /**
+     * Return an Intent to start this Activity.
+     * triggerDataSyncOnCreate allows disabling the background sync service onCreate. Should
+     * only be set to false during testing.
+     */
+    public static Intent getStartIntent(Context context, boolean triggerDataSyncOnCreate) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(EXTRA_TRIGGER_SYNC_FLAG, triggerDataSyncOnCreate);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activityComponent().inject(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,6 +75,16 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setAdapter(mMainAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mMainPresenter.attachView(this);
+        mMainPresenter.loadGanks();
+
+        if (getIntent().getBooleanExtra(EXTRA_TRIGGER_SYNC_FLAG, true)) {
+            startService(SyncService.getStartIntent(this));
+        }
     }
 
     @Override
@@ -99,5 +142,30 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void showGanks(List<Result> results) {
+        mMainAdapter.setResults(results);
+        mMainAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showGanksEmpty() {
+        mMainAdapter.setResults(Collections.<Result>emptyList());
+        mMainAdapter.notifyDataSetChanged();
+        Toast.makeText(this, R.string.empty_ganks, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showError() {
+        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_ganks))
+                .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMainPresenter.detachView();
     }
 }

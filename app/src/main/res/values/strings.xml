@@ -10,6 +10,6 @@
     <string name="dialog_action_cancel">Cancel</string>
     <string name="dialog_error_title">Sorry</string>
 
-    <string name="empty_ribots">There aren\'t any ganks</string>
-    <string name="error_loading_ribots">There was a problem loading the ganks</string>
+    <string name="empty_ganks">There aren\'t any ganks</string>
+    <string name="error_loading_ganks">There was a problem loading the ganks</string>
 </resources>

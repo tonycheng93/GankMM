@@ -51,7 +51,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     compile("me.drakeet.multitype:multitype:$rootProject.multitypeVersion") {
         exclude group: 'com.android.support'
     }
@@ -62,7 +62,7 @@ dependencies {
     apt "com.ryanharter.auto.value:auto-value-gson:$rootProject.ext.autoValueGsonVersion"
     provided "com.ryanharter.auto.value:auto-value-gson:$rootProject.ext.autoValueGsonVersion"
     apt "com.ryanharter.auto.value:auto-value-parcel:$rootProject.ext.autoValueParcelVersion"
-
+    compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     //test
     testCompile 'junit:junit:4.12'
 }

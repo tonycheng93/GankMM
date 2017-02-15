@@ -7,6 +7,7 @@ import com.sky.gankmm.data.model.Result;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by tonycheng on 2017/2/14.
@@ -35,7 +37,7 @@ public class DatabaseHelper {
         return mDb;
     }
 
-    public Observable<Result> setGanks(final List<Result> results) {
+    public Observable<Result> setGanks(final Collection<Result> results) {
         return Observable.create(new Observable.OnSubscribe<Result>() {
             @Override
             public void call(Subscriber<? super Result> subscriber) {
@@ -44,8 +46,9 @@ public class DatabaseHelper {
                 try {
                     mDb.delete(Db.GankTable.TABLE_NAME, null);
                     for (Result result : results) {
-                        long count = mDb.insert(Db.GankTable.TABLE_NAME, Db.GankTable.toContentValues(results),
+                        long count = mDb.insert(Db.GankTable.TABLE_NAME, Db.GankTable.toContentValues(result),
                                 SQLiteDatabase.CONFLICT_REPLACE);
+                        Timber.i("插入" + count + "条数据。");
                         if (count >= 0) subscriber.onNext(result);
                     }
                     transaction.markSuccessful();

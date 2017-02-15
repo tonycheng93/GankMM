@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * Created by tonycheng on 2017/2/14.
@@ -40,6 +41,7 @@ public class DataManager {
                 .concatMap(new Func1<Gank, Observable<? extends Result>>() {
                     @Override
                     public Observable<? extends Result> call(Gank gank) {
+                        Timber.i(gank.results().toString());
                         return mDatabaseHelper.setGanks(gank.results());
                     }
                 });

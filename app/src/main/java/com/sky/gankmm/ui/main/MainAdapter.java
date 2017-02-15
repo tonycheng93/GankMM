@@ -8,26 +8,25 @@ import android.widget.TextView;
 
 import com.sky.gankmm.R;
 import com.sky.gankmm.data.model.Result;
+import com.sky.gankmm.util.ImageLoader;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by tonycheng on 2017/2/14.
  */
 
-public class GanksAdapter extends RecyclerView.Adapter<GanksAdapter.GankViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.GankViewHolder> {
 
     private List<Result> mResults;
 
     @Inject
-    public GanksAdapter() {
+    public MainAdapter() {
         mResults = new ArrayList<>();
     }
 
@@ -44,7 +43,27 @@ public class GanksAdapter extends RecyclerView.Adapter<GanksAdapter.GankViewHold
     @Override
     public void onBindViewHolder(GankViewHolder holder, int position) {
         Result result = mResults.get(position);
-
+        if (result == null) {
+            return;
+        }
+        List<String> images = result.images();
+        if (images != null) {
+            holder.mBanner.setImages(images)
+                    .setImageLoader(new ImageLoader())
+                    .start();
+        }
+        String desc = result.desc();
+        if (!desc.isEmpty()) {
+            holder.mTitle.setText(desc);
+        }
+        String who = result.who();
+        if (!who.isEmpty()) {
+            holder.mAuthor.setText(who);
+        }
+        Date date = result.publishedAt();
+        if (date != null) {
+            holder.mTime.setText(date.toString());
+        }
     }
 
     @Override
@@ -54,18 +73,22 @@ public class GanksAdapter extends RecyclerView.Adapter<GanksAdapter.GankViewHold
 
     class GankViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.img_banner)
+//        @BindView(R.id.img_banner)
         Banner mBanner;
-        @BindView(R.id.title_text_view)
+//        @BindView(R.id.title_text_view)
         TextView mTitle;
-        @BindView(R.id.author_text_view)
+//        @BindView(R.id.author_text_view)
         TextView mAuthor;
-        @BindView(R.id.time_text_view)
+//        @BindView(R.id.time_text_view)
         TextView mTime;
 
         public GankViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            mBanner = (Banner) itemView.findViewById(R.id.img_banner);
+            mTitle = (TextView) itemView.findViewById(R.id.title_text_view);
+            mAuthor = (TextView) itemView.findViewById(R.id.author_text_view);
+            mTime = (TextView) itemView.findViewById(R.id.time_text_view);
         }
     }
 }

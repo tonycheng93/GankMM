@@ -25,7 +25,7 @@ public abstract class Result implements Parcelable {
     @Nullable
     public abstract List<String> images();
 
-    public abstract Date publishAt();
+    public abstract Date publishedAt();
 
     public abstract String type();
 
@@ -50,7 +50,7 @@ public abstract class Result implements Parcelable {
 
         public abstract Builder setImages(List<String> images);
 
-        public abstract Builder setPublishAt(Date publishAt);
+        public abstract Builder setPublishedAt(Date publishAt);
 
         public abstract Builder setType(String type);
 
