@@ -1,5 +1,6 @@
 package com.sky.gankmm.data;
 
+import com.google.gson.Gson;
 import com.sky.gankmm.data.local.DatabaseHelper;
 import com.sky.gankmm.data.local.PreferencesHelper;
 import com.sky.gankmm.data.model.Gank;
@@ -41,7 +42,7 @@ public class DataManager {
                 .concatMap(new Func1<Gank, Observable<? extends Result>>() {
                     @Override
                     public Observable<? extends Result> call(Gank gank) {
-                        Timber.i(gank.results().toString());
+                        Timber.i(new Gson().toJson(gank.results()));
                         return mDatabaseHelper.setGanks(gank.results());
                     }
                 });
