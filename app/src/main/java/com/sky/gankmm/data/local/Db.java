@@ -48,7 +48,7 @@ public class Db {
                         COLUMN_PUBLISHED_AT + " INTEGER NOT NULL, " +
                         COLUMN_TYPE + " TEXT NOT NULL, " +
                         COLUMN_URL + " TEXT NOT NULL, " +
-                        COLUMN_WHO + " TEXT NOT NULL" +
+                        COLUMN_WHO + " TEXT" +
                         ");";
 
         public static ContentValues toContentValues(Result result) {

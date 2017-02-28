@@ -1,6 +1,8 @@
 package com.sky.gankmm.ui.main;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.GankViewHolder
 
     @Override
     public GankViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gank_with_text_and_image, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout
+                .item_gank_with_text_and_image, parent, false);
         return new GankViewHolder(itemView);
     }
 
@@ -47,22 +50,22 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.GankViewHolder
             return;
         }
         List<String> images = result.images();
-        if (images != null) {
+        if (images != null && images.size() > 0) {
             holder.mBanner.setImages(images)
                     .setImageLoader(new ImageLoader())
                     .start();
         }
         String desc = result.desc();
-        if (!desc.isEmpty()) {
+        if (!TextUtils.isEmpty(desc)) {
             holder.mTitle.setText(desc);
         }
         String who = result.who();
-        if (!who.isEmpty()) {
+        if (!TextUtils.isEmpty(who)) {
             holder.mAuthor.setText(who);
         }
         Date date = result.publishedAt();
         if (date != null) {
-            holder.mTime.setText(date.toString());
+            holder.mTime.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss",date));
         }
     }
 
@@ -73,13 +76,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.GankViewHolder
 
     class GankViewHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.img_banner)
+        //        @BindView(R.id.img_banner)
         Banner mBanner;
-//        @BindView(R.id.title_text_view)
+        //        @BindView(R.id.title_text_view)
         TextView mTitle;
-//        @BindView(R.id.author_text_view)
+        //        @BindView(R.id.author_text_view)
         TextView mAuthor;
-//        @BindView(R.id.time_text_view)
+        //        @BindView(R.id.time_text_view)
         TextView mTime;
 
         public GankViewHolder(View itemView) {

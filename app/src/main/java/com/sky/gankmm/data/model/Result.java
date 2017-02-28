@@ -1,12 +1,12 @@
 package com.sky.gankmm.data.model;
 
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +31,7 @@ public abstract class Result implements Parcelable {
 
     public abstract String url();
 
+    @Nullable
     public abstract String who();
 
     public static Builder builder() {
