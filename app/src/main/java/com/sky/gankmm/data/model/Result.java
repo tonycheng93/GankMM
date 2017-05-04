@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ public abstract class Result implements Parcelable {
     @Nullable
     public abstract List<String> images();
 
-    public abstract Date publishedAt();
+    public abstract String publishedAt();
 
     public abstract String type();
 
@@ -51,7 +50,7 @@ public abstract class Result implements Parcelable {
 
         public abstract Builder setImages(List<String> images);
 
-        public abstract Builder setPublishedAt(Date publishAt);
+        public abstract Builder setPublishedAt(String publishAt);
 
         public abstract Builder setType(String type);
 

@@ -38,10 +38,11 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
-    compile "io.reactivex:rxjava:$rootProject.rxandroidVersion"
-    compile "io.reactivex:rxandroid:$rootProject.rxandroidVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.adapterRxjavaVersion"
-    compile "com.squareup.retrofit2:converter-gson:$converterGsonVersion"
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid2Version"
+    compile "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:$rootProject.adapterRxjavaVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.converterGsonVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.loggingInterceptorVersion"
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     compile("com.squareup.sqlbrite:sqlbrite:$rootProject.sqlbriteVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
