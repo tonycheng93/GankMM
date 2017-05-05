@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.sky.gankmm.data.model.Result;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -64,7 +63,7 @@ public class Db {
                 }
                 values.put(COLUMN_IMAGES, builder.toString());
             }
-            values.put(COLUMN_PUBLISHED_AT, result.publishedAt().getTime());
+            values.put(COLUMN_PUBLISHED_AT, result.publishedAt());
             values.put(COLUMN_TYPE, result.type());
             values.put(COLUMN_URL, result.url());
             values.put(COLUMN_WHO, result.who());
@@ -84,13 +83,11 @@ public class Db {
                 }
             }
 
-            long publishAt = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_PUBLISHED_AT));
-
             return Result.builder()
                     .setId(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID)))
                     .setDesc(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESC)))
                     .setImages(images)
-                    .setPublishedAt(new Date(publishAt))
+                    .setPublishedAt(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLISHED_AT)))
                     .setType(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TYPE)))
                     .setUrl(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_URL)))
                     .setWho(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_WHO)))

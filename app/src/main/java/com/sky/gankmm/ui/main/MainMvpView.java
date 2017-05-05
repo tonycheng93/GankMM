@@ -13,6 +13,8 @@ public interface MainMvpView extends MvpView {
 
     void showGanks(List<Result> results);
 
+    void loadMoreGanks(List<Result> results);
+
     void showGanksEmpty();
 
     void showError();

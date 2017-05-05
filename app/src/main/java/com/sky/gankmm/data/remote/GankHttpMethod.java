@@ -2,14 +2,15 @@ package com.sky.gankmm.data.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.http.core.HttpMethod;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DefaultSubscriber;
 
 /**
  * Created by tonycheng on 2017/4/25.
@@ -52,11 +53,18 @@ public class GankHttpMethod extends HttpMethod<GankHttpService> {
         return GankHttpService.class;
     }
 
-    public void getGankList(DefaultSubscriber<List<Result>> subscriber, int size, int page) {
-        getService().getGankList(size, page)
+//    public void getGankList(DefaultSubscriber<List<Result>> subscriber, int size, int page) {
+//        getService().getGankList(size, page)
+//                .subscribeOn(Schedulers.io())
+//                .map(mapList(Result.class))
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(subscriber);
+//    }
+
+    public Flowable<List<Result>> getGankList(int size, int page) {
+        return getService().getGankList(size, page)
                 .subscribeOn(Schedulers.io())
                 .map(mapList(Result.class))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

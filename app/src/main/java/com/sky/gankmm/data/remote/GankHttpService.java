@@ -12,7 +12,7 @@ import retrofit2.http.Path;
  * Created by tonycheng on 2017/4/25.
  */
 
-interface GankHttpService {
+public interface GankHttpService {
 
     @GET("data/Android/{size}/{page}")
     Flowable<HttpListResult<Result>> getGankList(@Path("size") int size, @Path("page") int page);

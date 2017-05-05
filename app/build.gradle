@@ -47,6 +47,7 @@ dependencies {
     compile("com.squareup.sqlbrite:sqlbrite:$rootProject.sqlbriteVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
+    compile "com.github.akarnokd:rxjava2-interop:$rootProject.rxjava2InteropVersion"
     compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
     compile "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"

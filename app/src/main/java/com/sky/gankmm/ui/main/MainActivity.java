@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,8 +29,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainMvpView {
+        implements NavigationView.OnNavigationItemSelectedListener, MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String EXTRA_TRIGGER_SYNC_FLAG =
             "com.sky.gankmm.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
@@ -38,6 +41,8 @@ public class MainActivity extends BaseActivity
     MainPresenter mMainPresenter;
     @Inject
     MainAdapter mMainAdapter;
+
+    private LinearLayoutManager mLayoutManager;
 
     /**
      * Return an Intent to start this Activity.
@@ -78,7 +83,8 @@ public class MainActivity extends BaseActivity
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setAdapter(mMainAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
         mMainPresenter.attachView(this);
         mMainPresenter.loadGanks();
 
@@ -151,6 +157,11 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    public void loadMoreGanks(List<Result> results) {
+
+    }
+
+    @Override
     public void showGanksEmpty() {
         mMainAdapter.setResults(Collections.<Result>emptyList());
         mMainAdapter.notifyDataSetChanged();
@@ -168,4 +179,27 @@ public class MainActivity extends BaseActivity
         super.onDestroy();
         mMainPresenter.detachView();
     }
+
+    @Override
+    public void onRefresh() {
+
+    }
+
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        private int lastVisibleItem;
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (newState == SCROLL_STATE_IDLE && lastVisibleItem == mMainAdapter.getItemCount() - 1){
+                //load more
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+        }
+    };
 }

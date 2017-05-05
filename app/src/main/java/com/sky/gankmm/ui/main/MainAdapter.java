@@ -2,7 +2,6 @@ package com.sky.gankmm.ui.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.sky.gankmm.util.ImageLoader;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,9 +61,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.GankViewHolder
         if (!TextUtils.isEmpty(who)) {
             holder.mAuthor.setText(who);
         }
-        Date date = result.publishedAt();
+        String date = result.publishedAt();
         if (date != null) {
-            holder.mTime.setText(DateFormat.format("yyyy-MM-dd HH:mm:ss",date));
+            holder.mTime.setText(date);
         }
     }
 

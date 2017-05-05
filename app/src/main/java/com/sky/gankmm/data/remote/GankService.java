@@ -2,14 +2,15 @@ package com.sky.gankmm.data.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.sky.gankmm.data.model.Gank;
 import com.sky.gankmm.util.AutoValueGsonFactory;
 
+import io.reactivex.Flowable;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import rx.Observable;
 
 /**
  * Created by tonycheng on 2017/2/14.
@@ -20,7 +21,7 @@ public interface GankService {
     String ENDPOINT = "http://gank.io/api/";
 
     @GET("data/Android/10/1")
-    Observable<Gank> getGanks();
+    Flowable<Gank> getGanks();
 
     /********
      * Helper class that sets up a new services

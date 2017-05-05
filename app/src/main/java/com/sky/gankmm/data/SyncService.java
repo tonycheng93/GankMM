@@ -12,13 +12,14 @@ import com.sky.gankmm.GankApplication;
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.util.AndroidComponentUtil;
 import com.sky.gankmm.util.NetworkUtil;
-import com.sky.gankmm.util.RxUtil;
+
+import org.reactivestreams.Subscription;
 
 import javax.inject.Inject;
 
-import rx.Observer;
-import rx.Subscription;
-import rx.schedulers.Schedulers;
+import io.reactivex.FlowableSubscriber;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -29,7 +30,10 @@ public class SyncService extends Service {
 
     @Inject
     DataManager mDataManager;
-    private Subscription mSubscription;
+//    private Subscription mSubscription;
+
+    private static final int SIZE = 10;
+    private static final int PAGE = 1;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SyncService.class);
@@ -55,33 +59,59 @@ public class SyncService extends Service {
             stopSelf(startId);
             return START_STICKY;
         }
-        RxUtil.unsubscribe(mSubscription);
-        mSubscription = mDataManager.syncGank()
+//        RxUtil.unsubscribe(mSubscription);
+//        mSubscription = mDataManager.syncGank()
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Observer<Result>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        Timber.i("Synced successfully!");
+//                        stopSelf(startId);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Timber.w(e, "Error syncing.");
+//                        stopSelf(startId);
+//                    }
+//
+//                    @Override
+//                    public void onNext(Result result) {
+//
+//                    }
+//                });
+        mDataManager.syncGank(SIZE, PAGE)
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Result>() {
+                .subscribe(new FlowableSubscriber<Result>() {
                     @Override
-                    public void onCompleted() {
-                        Timber.i("Synced successfully!");
-                        stopSelf(startId);
-                    }
+                    public void onSubscribe(@NonNull Subscription s) {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.w(e, "Error syncing.");
-                        stopSelf(startId);
                     }
 
                     @Override
                     public void onNext(Result result) {
 
                     }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Timber.w(t, "Error syncing.");
+                        stopSelf(startId);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.i("Synced successfully!");
+                        stopSelf(startId);
+                    }
                 });
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        if (mSubscription != null) mSubscription.unsubscribe();
+//        if (mSubscription != null) mSubscription.unsubscribe();
         super.onDestroy();
     }
 

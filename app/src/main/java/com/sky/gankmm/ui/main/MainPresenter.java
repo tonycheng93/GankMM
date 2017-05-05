@@ -9,11 +9,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
+import io.reactivex.FlowableSubscriber;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
+
 
 /**
  * Created by tonycheng on 2017/2/14.
@@ -40,22 +42,45 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
         if (mSubscription != null) mSubscription.unsubscribe();
     }
 
+//    public void loadGanks() {
+//        checkViewAttached();
+//        RxUtil.unsubscribe(mSubscription);
+//        mSubscription = mDataManager.getGanks()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Subscriber<List<Result>>() {
+//                    @Override
+//                    public void onCompleted() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Timber.e(e, "There was an error loading the ganks.");
+//                        getMvpView().showError();
+//                    }
+//
+//                    @Override
+//                    public void onNext(List<Result> results) {
+//                        if (results.isEmpty()) {
+//                            getMvpView().showGanksEmpty();
+//                        } else {
+//                            getMvpView().showGanks(results);
+//                        }
+//                    }
+//                });
+//    }
+
     public void loadGanks() {
         checkViewAttached();
         RxUtil.unsubscribe(mSubscription);
-        mSubscription = mDataManager.getGanks()
-                .observeOn(AndroidSchedulers.mainThread())
+        mDataManager.getGanks()
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<List<Result>>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new FlowableSubscriber<List<Result>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e, "There was an error loading the ganks.");
-                        getMvpView().showError();
+                    public void onSubscribe(@NonNull org.reactivestreams.Subscription s) {
+                        mSubscription = (Subscription) s;
                     }
 
                     @Override
@@ -65,6 +90,17 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                         } else {
                             getMvpView().showGanks(results);
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Timber.e(t, "There was an error loading the ganks.");
+                        getMvpView().showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
