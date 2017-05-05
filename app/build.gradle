@@ -54,9 +54,7 @@ dependencies {
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    compile("me.drakeet.multitype:multitype:$rootProject.multitypeVersion") {
-        exclude group: 'com.android.support'
-    }
+
     compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
     //auto-value
     provided "com.google.auto.value:auto-value:$rootProject.ext.autoValueVersion"

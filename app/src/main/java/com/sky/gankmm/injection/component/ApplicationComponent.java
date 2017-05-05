@@ -7,6 +7,7 @@ import com.sky.gankmm.data.DataManager;
 import com.sky.gankmm.data.SyncService;
 import com.sky.gankmm.data.local.DatabaseHelper;
 import com.sky.gankmm.data.local.PreferencesHelper;
+import com.sky.gankmm.data.remote.GankHttpService;
 import com.sky.gankmm.data.remote.GankService;
 import com.sky.gankmm.injection.ApplicationContext;
 import com.sky.gankmm.injection.module.ApplicationModule;
@@ -31,6 +32,8 @@ public interface ApplicationComponent {
     Application application();
 
     GankService gankService();
+
+    GankHttpService gankHttpService();
 
     DataManager dataManager();
 

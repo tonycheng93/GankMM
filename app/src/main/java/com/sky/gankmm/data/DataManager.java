@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import com.sky.gankmm.data.local.DatabaseHelper;
 import com.sky.gankmm.data.local.PreferencesHelper;
 import com.sky.gankmm.data.model.Result;
+import com.sky.gankmm.data.remote.GankHttpMethod;
 import com.sky.gankmm.data.remote.GankHttpService;
 import com.sky.gankmm.data.remote.GankService;
-import com.sky.gankmm.http.core.HttpListResult;
 
 import org.reactivestreams.Publisher;
 
@@ -67,12 +67,20 @@ public class DataManager {
 //    }
 
     public Flowable<Result> syncGank(int size, int page) {
-        return mGankHttpService.getGankList(size, page)
-                .concatMap(new Function<HttpListResult<Result>, Publisher<? extends Result>>() {
+//        return mGankHttpService.getGankList(size, page)
+//                .concatMap(new Function<HttpListResult<Result>, Publisher<? extends Result>>() {
+//                    @Override
+//                    public Publisher<? extends Result> apply(@NonNull HttpListResult<Result> resultHttpListResult) throws Exception {
+//                        Timber.d("get result from internet: " + new Gson().toJson(resultHttpListResult.results()));
+//                        return mDatabaseHelper.setGanks(resultHttpListResult.results());
+//                    }
+//                });
+        return GankHttpMethod.getInstance().getGankList(size,page)
+                .concatMap(new Function<List<Result>, Publisher<? extends Result>>() {
                     @Override
-                    public Publisher<? extends Result> apply(@NonNull HttpListResult<Result> resultHttpListResult) throws Exception {
-                        Timber.d("get result from internet: " + new Gson().toJson(resultHttpListResult.results));
-                        return mDatabaseHelper.setGanks(resultHttpListResult.results);
+                    public Publisher<? extends Result> apply(@NonNull List<Result> results) throws Exception {
+                        Timber.d("get result from internet: " + new Gson().toJson(results));
+                        return mDatabaseHelper.setGanks(results);
                     }
                 });
     }

@@ -7,6 +7,7 @@ package com.sky.gankmm.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.sky.gankmm.data.remote.GankHttpService;
 import com.sky.gankmm.data.remote.GankService;
 import com.sky.gankmm.injection.ApplicationContext;
 
@@ -42,5 +43,11 @@ public class ApplicationModule {
     @Singleton
     GankService provideGankService() {
         return GankService.Creator.newGankService();
+    }
+
+    @Provides
+    @Singleton
+    GankHttpService provideGankHttpService(){
+        return null;
     }
 }

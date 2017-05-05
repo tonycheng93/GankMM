@@ -105,8 +105,8 @@ public abstract class HttpMethod<T> {
             @Override
             public E apply(@NonNull HttpResult<E> eHttpResult) throws Exception {
                 if (eHttpResult != null) {
-                    if (eHttpResult.results != null) {
-                        return eHttpResult.results;
+                    if (eHttpResult.results() != null) {
+                        return eHttpResult.results();
                     }
                 }
                 return null;
@@ -119,8 +119,8 @@ public abstract class HttpMethod<T> {
             @Override
             public List<E> apply(@NonNull HttpListResult<E> eHttpListResult) throws Exception {
                 if (eHttpListResult != null) {
-                    if (eHttpListResult.results != null) {
-                        return eHttpListResult.results;
+                    if (eHttpListResult.results() != null) {
+                        return eHttpListResult.results();
                     }
                 }
                 return null;

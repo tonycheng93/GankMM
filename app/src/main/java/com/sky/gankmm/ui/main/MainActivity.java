@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
+
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -87,6 +88,8 @@ public class MainActivity extends BaseActivity
         recyclerView.setLayoutManager(mLayoutManager);
         mMainPresenter.attachView(this);
         mMainPresenter.loadGanks();
+
+        onRefresh();
 
         if (getIntent().getBooleanExtra(EXTRA_TRIGGER_SYNC_FLAG, true)) {
             startService(SyncService.getStartIntent(this));
@@ -182,7 +185,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onRefresh() {
-
+        mMainPresenter.loadGanks();
     }
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -191,7 +194,7 @@ public class MainActivity extends BaseActivity
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            if (newState == SCROLL_STATE_IDLE && lastVisibleItem == mMainAdapter.getItemCount() - 1){
+            if (newState == SCROLL_STATE_IDLE && lastVisibleItem == mMainAdapter.getItemCount() - 1) {
                 //load more
             }
         }

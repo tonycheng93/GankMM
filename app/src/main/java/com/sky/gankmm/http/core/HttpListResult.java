@@ -1,5 +1,10 @@
 package com.sky.gankmm.http.core;
 
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.List;
 
 /**
@@ -12,7 +17,27 @@ import java.util.List;
  * 修改时间：
  * 修改备注：
  */
-public class HttpListResult<T> {
-    public boolean error = false;
-    public List<T> results;
+@AutoValue
+public abstract class HttpListResult<T> {
+    public abstract boolean error();
+    public abstract List<T> results();
+
+
+    public static <T> Builder<T> builder() {
+        return new AutoValue_HttpListResult.Builder<>();
+    }
+
+    @AutoValue.Builder
+    public abstract static class Builder<T> {
+        public abstract Builder<T> error(boolean error);
+
+        public abstract Builder<T> results(List<T> results);
+
+        public abstract HttpListResult<T> build();
+    }
+
+    public static <T> TypeAdapter<HttpListResult<T>> typeAdapter(Gson gson,
+                                                                 TypeToken<? extends HttpListResult<T>> typeToken){
+        return new AutoValue_HttpListResult.GsonTypeAdapter(gson,typeToken);
+    }
 }
