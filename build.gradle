@@ -33,11 +33,12 @@ ext {
 
     //App dependencies
     supportLibraryVersion = '25.1.1'
-    rxjavaVersion = '1.2.6'
-    rxandroidVersion = '1.2.1'
+    rxjava2Version = '2.0.9'
+    rxandroid2Version = '2.0.1'
     retrofitVersion = '2.1.0'
-    adapterRxjavaVersion = '2.1.0'
+    adapterRxjavaVersion = '1.0.0'
     converterGsonVersion = '2.1.0'
+    loggingInterceptorVersion = '3.7.0'
     glideVersion = '3.7.0'
     sqlbriteVersion = '1.1.1'
     autoValueVersion = '1.2'
