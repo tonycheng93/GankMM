@@ -6,8 +6,6 @@ import com.sky.gankmm.data.local.DatabaseHelper;
 import com.sky.gankmm.data.local.PreferencesHelper;
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.data.remote.GankHttpMethod;
-import com.sky.gankmm.data.remote.GankHttpService;
-import com.sky.gankmm.data.remote.GankService;
 
 import org.reactivestreams.Publisher;
 
@@ -27,15 +25,11 @@ import timber.log.Timber;
 @Singleton
 public class DataManager {
 
-    private final GankHttpService mGankHttpService;
-    private final GankService mGankService;
     private final DatabaseHelper mDatabaseHelper;
     private final PreferencesHelper mPreferencesHelper;
 
     @Inject
-    public DataManager(GankHttpService gankHttpService, GankService gankService, DatabaseHelper databaseHelper, PreferencesHelper preferencesHelper) {
-        mGankHttpService = gankHttpService;
-        mGankService = gankService;
+    public DataManager(DatabaseHelper databaseHelper, PreferencesHelper preferencesHelper) {
         mDatabaseHelper = databaseHelper;
         mPreferencesHelper = preferencesHelper;
     }
@@ -75,7 +69,7 @@ public class DataManager {
 //                        return mDatabaseHelper.setGanks(resultHttpListResult.results());
 //                    }
 //                });
-        return GankHttpMethod.getInstance().getGankList(size,page)
+        return GankHttpMethod.getInstance().getGankList(size, page)
                 .concatMap(new Function<List<Result>, Publisher<? extends Result>>() {
                     @Override
                     public Publisher<? extends Result> apply(@NonNull List<Result> results) throws Exception {
@@ -87,5 +81,9 @@ public class DataManager {
 
     public Flowable<List<Result>> getGanks() {
         return mDatabaseHelper.getGanks().distinct();
+    }
+
+    public Flowable<List<Result>> getGanks(int size, int page) {
+        return GankHttpMethod.getInstance().getGankList(size, page);
     }
 }

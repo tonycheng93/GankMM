@@ -22,6 +22,13 @@ public abstract class HttpListResult<T> {
     public abstract boolean error();
     public abstract List<T> results();
 
+    public static <T> HttpListResult<T> create(boolean error, List<T> results) {
+        return HttpListResult.<T>builder()
+                .error(error)
+                .results(results)
+                .build();
+    }
+
 
     public static <T> Builder<T> builder() {
         return new AutoValue_HttpListResult.Builder<>();

@@ -1,9 +1,12 @@
 package com.sky.gankmm.ui.main;
 
+import com.google.gson.Gson;
+
 import com.sky.gankmm.data.DataManager;
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.ui.base.BasePresenter;
-import com.sky.gankmm.util.RxUtil;
+
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
@@ -13,7 +16,6 @@ import io.reactivex.FlowableSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
-import rx.Subscription;
 import timber.log.Timber;
 
 
@@ -24,7 +26,6 @@ import timber.log.Timber;
 public class MainPresenter extends BasePresenter<MainMvpView> {
 
     private final DataManager mDataManager;
-    private Subscription mSubscription;
 
     @Inject
     public MainPresenter(DataManager dataManager) {
@@ -39,7 +40,6 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mSubscription != null) mSubscription.unsubscribe();
     }
 
 //    public void loadGanks() {
@@ -72,22 +72,28 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
 //    }
 
     public void loadGanks() {
+        Timber.d("loadGanks().");
         checkViewAttached();
-        RxUtil.unsubscribe(mSubscription);
         mDataManager.getGanks()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new FlowableSubscriber<List<Result>>() {
                     @Override
                     public void onSubscribe(@NonNull org.reactivestreams.Subscription s) {
-                        mSubscription = (Subscription) s;
+                        Timber.d("onSubscribe().");
+                        s.request(10);
+                        Timber.d("onSubscribe() current thread: " + Thread.currentThread().getName());
+                        getMvpView().showLoading();
                     }
 
                     @Override
                     public void onNext(List<Result> results) {
+                        Timber.d("onNext: " + new Gson().toJson(results));
                         if (results.isEmpty()) {
+                            getMvpView().hideLoading();
                             getMvpView().showGanksEmpty();
                         } else {
+                            getMvpView().hideLoading();
                             getMvpView().showGanks(results);
                         }
                     }
@@ -95,6 +101,47 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                     @Override
                     public void onError(Throwable t) {
                         Timber.e(t, "There was an error loading the ganks.");
+                        getMvpView().hideLoading();
+                        getMvpView().showError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.d("onComplete().");
+                    }
+                });
+    }
+
+    public void loadGanks(int size, int page) {
+        checkViewAttached();
+        mDataManager.getGanks(size, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new FlowableSubscriber<List<Result>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Subscription s) {
+                        Timber.d("onSubscribe().");
+                        s.request(10);
+                        Timber.d("onSubscribe() current thread: " + Thread.currentThread().getName());
+                        getMvpView().showLoading();
+                    }
+
+                    @Override
+                    public void onNext(List<Result> results) {
+                        Timber.d("onNext: " + new Gson().toJson(results));
+                        if (results.isEmpty()) {
+                            getMvpView().hideLoading();
+                            getMvpView().showGanksEmpty();
+                        } else {
+                            getMvpView().hideLoading();
+                            getMvpView().loadMoreGanks(results);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Timber.e(t, "There was an error loading the ganks.");
+                        getMvpView().hideLoading();
                         getMvpView().showError();
                     }
 

@@ -75,7 +75,7 @@ public class DatabaseHelper {
                     for (Result result : results) {
                         long count = mDb.insert(Db.GankTable.TABLE_NAME, Db.GankTable.toContentValues(result),
                                 SQLiteDatabase.CONFLICT_REPLACE);
-                        Timber.d("insert " + count + "data.");
+                        Timber.d("insert " + count + " data.");
                         if (count >= 0) e.onNext(result);
                     }
                     transaction.markSuccessful();
@@ -105,6 +105,7 @@ public class DatabaseHelper {
                 .mapToList(new Func1<Cursor, Result>() {
                     @Override
                     public Result call(Cursor cursor) {
+                        Timber.d("getGanks() from db.");
                         return Db.GankTable.parseCursor(cursor);
                     }
                 }));

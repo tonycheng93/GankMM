@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.http.core.HttpMethod;
+import com.sky.gankmm.util.AutoValueGsonFactory;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class GankHttpMethod extends HttpMethod<GankHttpService> {
     @Override
     public Gson getGson() {
         return new GsonBuilder()
+                .registerTypeAdapterFactory(AutoValueGsonFactory.create())
                 .setDateFormat("yyyy-MM-dd")
                 .create();
     }

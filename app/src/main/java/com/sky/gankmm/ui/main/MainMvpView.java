@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface MainMvpView extends MvpView {
 
+    void showLoading();
+
     void showGanks(List<Result> results);
 
     void loadMoreGanks(List<Result> results);
@@ -18,4 +20,6 @@ public interface MainMvpView extends MvpView {
     void showGanksEmpty();
 
     void showError();
+
+    void hideLoading();
 }

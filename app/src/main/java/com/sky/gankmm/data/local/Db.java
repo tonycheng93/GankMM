@@ -21,25 +21,25 @@ public class Db {
 
     }
 
-    public abstract static class GankTable {
+    abstract static class GankTable {
 
-        public static final String TABLE_NAME = "gank_result";
+        static final String TABLE_NAME = "gank_result";
 
-        public static final String COLUMN_ID = "_id";
+        static final String COLUMN_ID = "_id";
 
-        public static final String COLUMN_DESC = "desc";
+        static final String COLUMN_DESC = "desc";
 
-        public static final String COLUMN_IMAGES = "images";
+        static final String COLUMN_IMAGES = "images";
 
-        public static final String COLUMN_PUBLISHED_AT = "publishedAt";
+        static final String COLUMN_PUBLISHED_AT = "publishedAt";
 
-        public static final String COLUMN_TYPE = "type";
+        static final String COLUMN_TYPE = "type";
 
-        public static final String COLUMN_URL = "url";
+        static final String COLUMN_URL = "url";
 
-        public static final String COLUMN_WHO = "who";
+        static final String COLUMN_WHO = "who";
 
-        public static final String CREATE =
+        static final String CREATE =
                 "CREATE TABLE " + TABLE_NAME + "(" +
                         COLUMN_ID + " TEXT PRIMARY KEY, " +
                         COLUMN_DESC + " TEXT NOT NULL, " +
@@ -50,7 +50,7 @@ public class Db {
                         COLUMN_WHO + " TEXT" +
                         ");";
 
-        public static ContentValues toContentValues(Result result) {
+        static ContentValues toContentValues(Result result) {
             ContentValues values = new ContentValues();
 
             values.put(COLUMN_ID, result.id());
@@ -71,7 +71,7 @@ public class Db {
 
         }
 
-        public static Result parseCursor(Cursor cursor) {
+        static Result parseCursor(Cursor cursor) {
             String imagesString = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGES));
             List<String> images = null;
             if (!TextUtils.isEmpty(imagesString)) {
