@@ -134,6 +134,7 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                             getMvpView().showGanksEmpty();
                         } else {
                             getMvpView().hideLoading();
+                            Timber.d("results hashcode: " + results.hashCode());
                             getMvpView().loadMoreGanks(results);
                         }
                     }

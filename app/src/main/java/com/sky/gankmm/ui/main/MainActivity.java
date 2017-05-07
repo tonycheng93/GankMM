@@ -14,6 +14,7 @@ import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.ui.base.BaseActivity;
 import com.sky.gankmm.util.DialogFactory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,9 +38,10 @@ public class MainActivity extends BaseActivity
 
     private LinearLayoutManager mLayoutManager;
     private SwipeRefreshLayout mRefreshLayout;
-    private List<Result> mResults;
+    private List<Result> mResults = new ArrayList<>();
     private static final int SIZE = 10;
     private int mPage = 1;
+    private RecyclerView recyclerView;
 
     /**
      * Return an Intent to start this Activity.
@@ -64,7 +66,7 @@ public class MainActivity extends BaseActivity
                 getResources().getColor(R.color.colorPrimaryDark));
         mRefreshLayout.setOnRefreshListener(this);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setAdapter(mMainAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -90,17 +92,22 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void showGanks(List<Result> results) {
-        mResults = results;
-        mMainAdapter.setResults(results);
+        mResults.addAll(results);
+        mMainAdapter.setResults(mResults);
         mMainAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadMoreGanks(List<Result> results) {
         if (results != null && results.size() > 0) {
-            mResults.addAll(results);
-            mMainAdapter.setResults(mResults);
-            mMainAdapter.notifyDataSetChanged();
+            if (!mResults.containsAll(results)) {
+                mResults.addAll(results);
+                mMainAdapter.setResults(mResults);
+                mMainAdapter.notifyDataSetChanged();
+            }
+//            mResults.addAll(results);
+//            mMainAdapter.setResults(mResults);
+//            mMainAdapter.notifyDataSetChanged();
         }
 
     }
@@ -133,9 +140,13 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRefresh() {
         mPage = 1;
-        if (mResults != null) {
-            mResults.clear();
-        }
+//        if (mResults != null) {
+//            List<Result> tempList = mResults;
+//            mResults.clear();
+//            mMainAdapter.setResults(tempList);
+//            mMainAdapter.notifyItemRangeRemoved(0,tempList.size());
+//            tempList.clear();
+//        }
         mMainPresenter.loadGanks(SIZE, mPage);
     }
 
@@ -156,6 +167,7 @@ public class MainActivity extends BaseActivity
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
+            mRefreshLayout.setEnabled(mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
             lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
             Timber.d("onScrolled " + lastVisibleItem);
         }

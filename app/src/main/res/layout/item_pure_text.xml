@@ -42,5 +42,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="#4a4a4a"/>
+        android:background="#E5E0E0"/>
 </RelativeLayout>

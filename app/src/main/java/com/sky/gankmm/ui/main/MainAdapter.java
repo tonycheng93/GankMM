@@ -17,9 +17,12 @@ import com.sky.gankmm.R;
 import com.sky.gankmm.data.model.Result;
 import com.sky.gankmm.injection.ActivityContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 /**
  * Created by tonycheng on 2017/4/26.
@@ -37,12 +40,14 @@ public class MainAdapter extends RecyclerView.Adapter {
     @Inject
     public MainAdapter(@ActivityContext Context context) {
         mContext = context;
+        mGankEntityList = new ArrayList<>();
         mLayoutInflater = LayoutInflater.from(context);
     }
 
     public void setResults(List<Result> gankEntityList) {
         mGankEntityList = gankEntityList;
 //        notifyDataSetChanged();
+        Timber.d("setResults current thread: " + Thread.currentThread().getName());
     }
 
     @Override
