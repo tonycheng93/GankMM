@@ -22,8 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 /**
  * Created by tonycheng on 2017/4/26.
  */
@@ -47,7 +45,6 @@ public class MainAdapter extends RecyclerView.Adapter {
     public void setResults(List<Result> gankEntityList) {
         mGankEntityList = gankEntityList;
 //        notifyDataSetChanged();
-        Timber.d("setResults current thread: " + Thread.currentThread().getName());
     }
 
     @Override
@@ -92,12 +89,14 @@ public class MainAdapter extends RecyclerView.Adapter {
         } else if (itemViewType == TYPE_TEXT_WITH_IMAGE) {
             ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
             final List<String> images = gankEntity.images();
-            Glide.with(mContext)
-                    .load(images.get(0))
-                    .asBitmap()
-                    .thumbnail(0.1f)
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .into(imageViewHolder.mIvImage);
+            if (images != null && images.size() > 0) {
+                Glide.with(mContext)
+                        .load(images.get(0))
+                        .asBitmap()
+                        .thumbnail(0.1f)
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(imageViewHolder.mIvImage);
+            }
             final String desc = gankEntity.desc();
             if (!TextUtils.isEmpty(desc)) {
                 imageViewHolder.mTvDesc.setText(desc);
@@ -122,7 +121,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         final Result gankEntity = mGankEntityList.get(position);
         if (gankEntity != null) {
-            if (gankEntity.images() != null && gankEntity.images().size() > 0) {
+            if (gankEntity.images() != null) {
                 return TYPE_TEXT_WITH_IMAGE;
             } else {
                 return TYPE_PURE_TEXT;

@@ -41,7 +41,6 @@ public class MainActivity extends BaseActivity
     private List<Result> mResults = new ArrayList<>();
     private static final int SIZE = 10;
     private int mPage = 1;
-    private RecyclerView recyclerView;
 
     /**
      * Return an Intent to start this Activity.
@@ -66,7 +65,7 @@ public class MainActivity extends BaseActivity
                 getResources().getColor(R.color.colorPrimaryDark));
         mRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setAdapter(mMainAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -86,7 +85,6 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void showLoading() {
-        Timber.d("showLoading() current thread: " + Thread.currentThread().getName());
         mRefreshLayout.setRefreshing(true);
     }
 
@@ -105,9 +103,6 @@ public class MainActivity extends BaseActivity
                 mMainAdapter.setResults(mResults);
                 mMainAdapter.notifyDataSetChanged();
             }
-//            mResults.addAll(results);
-//            mMainAdapter.setResults(mResults);
-//            mMainAdapter.notifyDataSetChanged();
         }
 
     }
@@ -127,7 +122,6 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void hideLoading() {
-        Timber.d("hideLoading() current thread: " + Thread.currentThread().getName());
         mRefreshLayout.setRefreshing(false);
     }
 
@@ -140,13 +134,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRefresh() {
         mPage = 1;
-//        if (mResults != null) {
-//            List<Result> tempList = mResults;
-//            mResults.clear();
-//            mMainAdapter.setResults(tempList);
-//            mMainAdapter.notifyItemRangeRemoved(0,tempList.size());
-//            tempList.clear();
-//        }
         mMainPresenter.loadGanks(SIZE, mPage);
     }
 
@@ -169,7 +156,6 @@ public class MainActivity extends BaseActivity
             super.onScrolled(recyclerView, dx, dy);
             mRefreshLayout.setEnabled(mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
             lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-            Timber.d("onScrolled " + lastVisibleItem);
         }
     };
 }
