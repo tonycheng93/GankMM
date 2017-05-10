@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -56,15 +55,15 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
-    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
     //auto-value
     provided "com.google.auto.value:auto-value:$rootProject.ext.autoValueVersion"
-    apt "com.google.auto.value:auto-value:$rootProject.ext.autoValueVersion"
-    apt "com.ryanharter.auto.value:auto-value-gson:$rootProject.ext.autoValueGsonVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$rootProject.ext.autoValueVersion"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$rootProject.ext.autoValueGsonVersion"
     provided "com.ryanharter.auto.value:auto-value-gson:$rootProject.ext.autoValueGsonVersion"
-    apt "com.ryanharter.auto.value:auto-value-parcel:$rootProject.ext.autoValueParcelVersion"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:$rootProject.ext.autoValueParcelVersion"
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     //test
     testCompile 'junit:junit:4.12'
