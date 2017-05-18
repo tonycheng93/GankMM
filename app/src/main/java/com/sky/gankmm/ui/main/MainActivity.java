@@ -90,8 +90,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void showGanks(List<Result> results) {
-        mResults.addAll(results);
-        mMainAdapter.setResults(mResults);
+        List<Result> tempResults = new ArrayList<>();
+        tempResults.addAll(results);
+        mResults = tempResults;
+//        mResults.addAll(results);
+        mMainAdapter.setResults(tempResults);
         mMainAdapter.notifyDataSetChanged();
     }
 
@@ -134,7 +137,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRefresh() {
         mPage = 1;
-        mMainPresenter.loadGanks(SIZE, mPage);
+        mMainPresenter.loadGanks(SIZE, mPage, true);
     }
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -143,11 +146,12 @@ public class MainActivity extends BaseActivity
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
-            if (newState == SCROLL_STATE_IDLE && lastVisibleItem == mMainAdapter.getItemCount() - 1) {
+            if (newState == SCROLL_STATE_IDLE && lastVisibleItem == mMainAdapter.getItemCount() -
+                    1) {
                 //load more
                 Timber.d("onScrollStateChanged load more.");
                 mPage += 1;
-                mMainPresenter.loadGanks(SIZE, mPage);
+                mMainPresenter.loadGanks(SIZE, mPage, false);
             }
         }
 

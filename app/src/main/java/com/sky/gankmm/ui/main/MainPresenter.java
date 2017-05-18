@@ -112,7 +112,7 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                 });
     }
 
-    public void loadGanks(int size, int page) {
+    public void loadGanks(int size, int page, final boolean clear) {
         checkViewAttached();
         mDataManager.getGanks(size, page)
                 .subscribeOn(Schedulers.io())
@@ -135,7 +135,11 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                         } else {
                             getMvpView().hideLoading();
                             Timber.d("results hashcode: " + results.hashCode());
-                            getMvpView().loadMoreGanks(results);
+                            if (clear){
+                                getMvpView().showGanks(results);
+                            }else {
+                                getMvpView().loadMoreGanks(results);
+                            }
                         }
                     }
 
